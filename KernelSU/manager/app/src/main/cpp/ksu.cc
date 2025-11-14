@@ -111,7 +111,7 @@ bool is_manager() {
     if (info.version > 0) {
         return (info.flags & 0x2) != 0;
     }
-    return legacy_get_info().first;
+    return legacy_get_info().first > 0;
 }
 
 bool uid_should_umount(int uid) {
@@ -179,6 +179,22 @@ bool is_kernel_umount_enabled() {
     uint64_t value = 0;
     bool supported = false;
     if (!get_feature(KSU_FEATURE_KERNEL_UMOUNT, &value, &supported)) {
+        return false;
+    }
+    if (!supported) {
+        return false;
+    }
+    return value != 0;
+}
+
+bool set_enhanced_security_enabled(bool enabled) {
+    return set_feature(KSU_FEATURE_ENHANCED_SECURITY, enabled ? 1 : 0);
+}
+
+bool is_enhanced_security_enabled() {
+    uint64_t value = 0;
+    bool supported = false;
+    if (!get_feature(KSU_FEATURE_ENHANCED_SECURITY, &value, &supported)) {
         return false;
     }
     if (!supported) {

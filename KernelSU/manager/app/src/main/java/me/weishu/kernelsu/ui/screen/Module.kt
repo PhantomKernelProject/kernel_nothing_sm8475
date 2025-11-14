@@ -93,6 +93,7 @@ import me.weishu.kernelsu.Natives
 import me.weishu.kernelsu.R
 import me.weishu.kernelsu.ksuApp
 import me.weishu.kernelsu.ui.component.ConfirmResult
+import me.weishu.kernelsu.ui.component.DropdownImpl
 import me.weishu.kernelsu.ui.component.SearchBox
 import me.weishu.kernelsu.ui.component.SearchPager
 import me.weishu.kernelsu.ui.component.rememberConfirmDialog
@@ -121,7 +122,6 @@ import top.yukonga.miuix.kmp.basic.Switch
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberPullToRefreshState
-import top.yukonga.miuix.kmp.extra.DropdownImpl
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.ImmersionMore
 import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
@@ -145,6 +145,7 @@ fun ModulePager(
 
     LaunchedEffect(navigator) {
         if (viewModel.moduleList.isEmpty() || viewModel.searchResults.value.isEmpty() || viewModel.isNeedRefresh) {
+            viewModel.checkModuleUpdate = prefs.getBoolean("module_check_update",true)
             viewModel.sortEnabledFirst = prefs.getBoolean("module_sort_enabled_first", false)
             viewModel.sortActionFirst = prefs.getBoolean("module_sort_action_first", false)
             viewModel.fetchModuleList()
@@ -364,13 +365,9 @@ fun ModulePager(
                                     optionSize = 2,
                                     isSelected = viewModel.sortActionFirst,
                                     onSelectedIndexChange = {
-                                        viewModel.sortActionFirst =
-                                            !viewModel.sortActionFirst
+                                        viewModel.sortActionFirst = !viewModel.sortActionFirst
                                         prefs.edit {
-                                            putBoolean(
-                                                "module_sort_action_first",
-                                                viewModel.sortActionFirst
-                                            )
+                                            putBoolean("module_sort_action_first", viewModel.sortActionFirst)
                                         }
                                         scope.launch {
                                             viewModel.fetchModuleList()
@@ -384,13 +381,9 @@ fun ModulePager(
                                     optionSize = 2,
                                     isSelected = viewModel.sortEnabledFirst,
                                     onSelectedIndexChange = {
-                                        viewModel.sortEnabledFirst =
-                                            !viewModel.sortEnabledFirst
+                                        viewModel.sortEnabledFirst = !viewModel.sortEnabledFirst
                                         prefs.edit {
-                                            putBoolean(
-                                                "module_sort_enabled_first",
-                                                viewModel.sortEnabledFirst
-                                            )
+                                            putBoolean("module_sort_enabled_first", viewModel.sortEnabledFirst)
                                         }
                                         scope.launch {
                                             viewModel.fetchModuleList()

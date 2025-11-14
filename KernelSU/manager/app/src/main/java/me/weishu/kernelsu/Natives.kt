@@ -19,8 +19,6 @@ object Natives {
     // 12143: breaking: new supercall impl
     const val MINIMAL_SUPPORTED_KERNEL = 22000
 
-    // 12040: Support disable sucompat mode
-    const val MINIMAL_SUPPORTED_SU_COMPAT = 12040
     const val KERNEL_SU_DOMAIN = "u:r:su:s0"
 
     const val ROOT_UID = 0
@@ -74,6 +72,15 @@ object Natives {
     external fun isKernelUmountEnabled(): Boolean
     external fun setKernelUmountEnabled(enabled: Boolean): Boolean
 
+    /**
+     * Enhanced security can be enabled/disabled.
+     *  0: disabled
+     *  1: enabled
+     *  negative : error
+     */
+    external fun isEnhancedSecurityEnabled(): Boolean
+    external fun setEnhancedSecurityEnabled(enabled: Boolean): Boolean
+
     private const val NON_ROOT_DEFAULT_PROFILE_KEY = "$"
     private const val NOBODY_UID = 9999
 
@@ -95,7 +102,7 @@ object Natives {
     }
 
     fun requireNewKernel(): Boolean {
-        return version < MINIMAL_SUPPORTED_KERNEL
+        return version != -1 && version < MINIMAL_SUPPORTED_KERNEL
     }
 
     @Immutable
